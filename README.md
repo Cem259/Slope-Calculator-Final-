@@ -1,2 +1,2 @@
-# Slope Calculator_V1
+# Slope Calculator V1
 Slope Calculator

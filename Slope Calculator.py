@@ -6,6 +6,11 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import QFont
 
+
+def compute_slope(distance, h1, h2):
+    """Compute the slope percentage between two heights over a horizontal distance."""
+    return ((h2 - h1) / distance) * 100 if distance != 0 else float('inf')
+
 class ModernStyledWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -76,7 +81,7 @@ class SlopeCalculator(ModernStyledWindow):
             h_distance = float(self.input_distance.text())
             h1 = float(self.input_h1.text())
             h2 = float(self.input_h2.text())
-            slope = ((h2 - h1) / h_distance) * 100 if h_distance != 0 else float('inf')
+            slope = compute_slope(h_distance, h1, h2)
             self.result_label.setText(f"Slope: {slope:.2f}%")
             self.plot_graph(h_distance, h1, h2, slope)
         except ValueError:

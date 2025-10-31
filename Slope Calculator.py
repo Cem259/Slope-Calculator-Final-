@@ -50,19 +50,16 @@ class SlopeCalculator(ModernStyledWindow):
         self.label1 = QLabel("Horizontal Distance:")
         layout.addWidget(self.label1)
         self.input_distance = QLineEdit()
-        self.input_distance.setStyleSheet("color: red;")
         layout.addWidget(self.input_distance)
         
         self.label2 = QLabel("First Point Height:")
         layout.addWidget(self.label2)
         self.input_h1 = QLineEdit()
-        self.input_h1.setStyleSheet("color: red;")
         layout.addWidget(self.input_h1)
         
         self.label3 = QLabel("Second Point Height:")
         layout.addWidget(self.label3)
         self.input_h2 = QLineEdit()
-        self.input_h2.setStyleSheet("color: red;")
         layout.addWidget(self.input_h2)
         
         self.calc_button = QPushButton("Calculate Slope")

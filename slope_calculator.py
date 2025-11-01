@@ -15,6 +15,7 @@ from PyQt6.QtWidgets import (
     QLineEdit,
     QMessageBox,
     QPushButton,
+    QSizePolicy,
     QVBoxLayout,
     QWidget,
 )
@@ -129,7 +130,7 @@ class SlopeCalculator(ModernStyledWindow):
                 border-radius: 6px;
                 padding: 6px 8px;
                 font-size: 12pt;
-                color: #333333;
+                color: #d32f2f;
                 background-color: #fdfdfd;
             }
             QLineEdit:focus {
@@ -206,7 +207,7 @@ class SlopeCalculator(ModernStyledWindow):
                 border-radius: 6px;
                 padding: 6px 8px;
                 font-size: 12pt;
-                color: #f4f4f4;
+                color: #ff6b6b;
                 background-color: #15181d;
             }
             QLineEdit:focus {
@@ -368,16 +369,24 @@ class SlopeCalculator(ModernStyledWindow):
         form_layout.addWidget(self.input_h2, 2, 1)
 
         controls_row = QHBoxLayout()
-        controls_row.setSpacing(12)
+        controls_row.setSpacing(18)
 
         self.calc_button = QPushButton()
         self.calc_button.setObjectName("calculateButton")
         self.calc_button.clicked.connect(self.calculate_slope)
+        calc_button_policy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        calc_button_policy.setHorizontalStretch(1)
+        self.calc_button.setSizePolicy(calc_button_policy)
+        self.calc_button.setMinimumWidth(150)
         controls_row.addWidget(self.calc_button)
 
         self.view3d_button = QPushButton()
         self.view3d_button.setObjectName("view3dButton")
         self.view3d_button.clicked.connect(self.show_3d_view)
+        view_button_policy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        view_button_policy.setHorizontalStretch(1)
+        self.view3d_button.setSizePolicy(view_button_policy)
+        self.view3d_button.setMinimumWidth(150)
         controls_row.addWidget(self.view3d_button)
 
         controls_row.addStretch()
@@ -385,6 +394,7 @@ class SlopeCalculator(ModernStyledWindow):
         self.settings_button = QPushButton()
         self.settings_button.setObjectName("settingsButton")
         self.settings_button.clicked.connect(self.open_settings_dialog)
+        self.settings_button.setMinimumWidth(120)
         controls_row.addWidget(self.settings_button)
 
         form_layout.addLayout(controls_row, 3, 0, 1, 2)

@@ -80,19 +80,19 @@ class MainWindow(QMainWindow):
     # ------------------------------------------------------------------ actions
     def _create_actions(self) -> None:
         t = self._translator.translate
-        self.new_action = self._make_action("fa.file-o", t("action_new"), self._new_profile)
-        self.open_action = self._make_action("fa.folder-open", t("action_open"), self._open_project)
-        self.save_action = self._make_action("fa.save", t("action_save"), self._save_project)
-        self.import_action = self._make_action("fa.upload", t("action_import"), self._import_csv)
-        self.export_action = self._make_action("fa.download", t("action_export"), self._export_csv)
+        self.new_action = self._make_action("fa5r.file", t("action_new"), self._new_profile)
+        self.open_action = self._make_action("fa5s.folder-open", t("action_open"), self._open_project)
+        self.save_action = self._make_action("fa5s.save", t("action_save"), self._save_project)
+        self.import_action = self._make_action("fa5s.upload", t("action_import"), self._import_csv)
+        self.export_action = self._make_action("fa5s.download", t("action_export"), self._export_csv)
         self.view2d_action = self._make_action(
-            "fa.line-chart", t("action_view2d"), lambda _: self._set_view(0), checkable=True
+            "fa5s.chart-line", t("action_view2d"), lambda _: self._set_view(0), checkable=True
         )
         self.view3d_action = self._make_action(
-            "fa.cube", t("action_view3d"), lambda _: self._set_view(1), checkable=True
+            "fa5s.cube", t("action_view3d"), lambda _: self._set_view(1), checkable=True
         )
-        self.theme_action = self._make_action("fa.sun-o", t("action_theme"), self._toggle_theme)
-        self.settings_action = self._make_action("fa.cog", t("action_settings"), self._open_settings)
+        self.theme_action = self._make_action("fa5r.sun", t("action_theme"), self._toggle_theme)
+        self.settings_action = self._make_action("fa5s.cog", t("action_settings"), self._open_settings)
 
     def _make_action(self, icon_name: str, text: str, slot, checkable: bool = False) -> QAction:
         action = QAction(qta.icon(icon_name), text, self)
@@ -258,7 +258,7 @@ class MainWindow(QMainWindow):
         self.view3d_action.setText(t("action_view3d"))
         self.theme_action.setText(t("action_theme"))
         self.settings_action.setText(t("action_settings"))
-        theme_icon = "fa.sun-o" if self._current_theme == "light" else "fa.moon-o"
+        theme_icon = "fa5r.sun" if self._current_theme == "light" else "fa5r.moon"
         self.theme_action.setIcon(qta.icon(theme_icon))
         self.plot2d.retranslate()
         self.plot3d.retranslate()

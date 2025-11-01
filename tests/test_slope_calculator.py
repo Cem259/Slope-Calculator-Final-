@@ -3,7 +3,7 @@ import math
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-MODULE_PATH = PROJECT_ROOT / "Slope Calculator.py"
+MODULE_PATH = PROJECT_ROOT / "slope_calculator.py"
 
 
 def load_compute_slope():

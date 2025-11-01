@@ -17,7 +17,7 @@ pip install PyQt6 matplotlib numpy
 Projeyi klonladıktan veya ZIP dosyasını açtıktan sonra dizine girip aşağıdaki komutla uygulamayı başlatın:
 
 ```bash
-python "Slope Calculator.py"
+python main.py
 ```
 
 Komut, PyQt6 arayüzünü açar ve aşağıdaki işlevleri sunar:

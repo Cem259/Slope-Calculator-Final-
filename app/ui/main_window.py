@@ -56,8 +56,8 @@ class MainWindow(QMainWindow):
 
         central = QWidget(self)
         central_layout = QHBoxLayout(central)
-        central.setContentsMargins(8, 8, 8, 8)
-        central.setSpacing(12)
+        central_layout.setContentsMargins(8, 8, 8, 8)
+        central_layout.setSpacing(12)
 
         splitter = QSplitter(Qt.Orientation.Horizontal)
         central_layout.addWidget(splitter)

@@ -1,8 +1,15 @@
 import sys
+
 import numpy as np
 import matplotlib.pyplot as plt
 from PyQt6.QtWidgets import (
-    QApplication, QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit, QMessageBox
+    QApplication,
+    QWidget,
+    QPushButton,
+    QVBoxLayout,
+    QLabel,
+    QLineEdit,
+    QMessageBox,
 )
 from PyQt6.QtGui import QFont
 
@@ -101,8 +108,13 @@ class SlopeCalculator(ModernStyledWindow):
         plt.text(0.05 * distance, max(h1, h2) - 1, f"Slope: {slope:.2f}%", fontsize=12, color='black', bbox=dict(facecolor='white', alpha=0.5))
         plt.show()
 
-if __name__ == '__main__':
+def run():
+    """Launch the slope calculator application."""
     app = QApplication(sys.argv)
     win = SlopeCalculator()
     win.show()
-    sys.exit(app.exec())
+    return app.exec()
+
+
+if __name__ == "__main__":
+    sys.exit(run())

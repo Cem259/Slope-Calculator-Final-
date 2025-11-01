@@ -266,7 +266,7 @@ class SlopeCalculator(ModernStyledWindow):
 
         self.translations = {
             "tr": {
-                "header_title": "Eğim Analiz Panosu",
+                "header_title": "Eğim Hesaplayıcısı",
                 "subtitle": "Arazi ve yapı projelerinizi planlamak için eğim hesaplamalarını keşfedin.",
                 "window_title": "Eğim Hesaplayıcı",
                 "distance_label": "Yatay Mesafe:",

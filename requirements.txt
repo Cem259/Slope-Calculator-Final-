@@ -1,7 +1,0 @@
-PyQt6
-PyQt6-WebEngine
-matplotlib
-QtAwesome
-plotly
-numpy
-pyqtgraph

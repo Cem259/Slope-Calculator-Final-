@@ -114,7 +114,7 @@ class SlopeCalculator(ModernStyledWindow):
             QLabel#resultLabel {
                 font-size: 16pt;
                 font-weight: 600;
-                color: #d32f2f;
+                color: #000000;
             }
             QLabel#resultTipLabel {
                 font-size: 10pt;
@@ -150,7 +150,7 @@ class SlopeCalculator(ModernStyledWindow):
             }
             QPushButton#calculateButton {
                 background-color: #8bc34a;
-                color: #ffffff;
+                color: #000000;
             }
             QPushButton#calculateButton:hover {
                 background-color: #7cb342;
@@ -198,7 +198,7 @@ class SlopeCalculator(ModernStyledWindow):
             QLabel#resultLabel {
                 font-size: 16pt;
                 font-weight: 600;
-                color: #ff6b6b;
+                color: #000000;
             }
             QLabel#resultTipLabel {
                 font-size: 10pt;
@@ -234,7 +234,7 @@ class SlopeCalculator(ModernStyledWindow):
             }
             QPushButton#calculateButton {
                 background-color: #66bb6a;
-                color: #0b1a0f;
+                color: #000000;
             }
             QPushButton#calculateButton:hover {
                 background-color: #57a55b;

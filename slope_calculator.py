@@ -1,4 +1,5 @@
 import sys
+from contextlib import suppress
 
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D  # noqa: F401  # Required for 3D projection registration
@@ -332,6 +333,7 @@ class SlopeCalculator(ModernStyledWindow):
         self.current_language = "tr"
         self.last_result_value = None
         self.current_view_mode = "2d"
+        self.current_figure = None
 
         self.setGeometry(100, 100, 520, 420)
         self.last_inputs = None
@@ -453,6 +455,7 @@ class SlopeCalculator(ModernStyledWindow):
 
         with plt.style.context(style):
             fig, ax = plt.subplots(figsize=(6, 4))
+            self._register_figure(fig)
             ax.plot(
                 [0, distance],
                 [h1, h1],
@@ -518,6 +521,7 @@ class SlopeCalculator(ModernStyledWindow):
 
         with plt.style.context(style):
             fig = plt.figure(figsize=(6, 4))
+            self._register_figure(fig)
             ax = fig.add_subplot(111, projection="3d")
 
             x_values = [0, distance]
@@ -573,6 +577,24 @@ class SlopeCalculator(ModernStyledWindow):
 
             fig.tight_layout()
             plt.show()
+
+    def _close_current_figure(self):
+        if self.current_figure is not None:
+            with suppress(Exception):
+                plt.close(self.current_figure)
+            self.current_figure = None
+
+    def _register_figure(self, figure):
+        self._close_current_figure()
+        self.current_figure = figure
+        if figure.canvas is not None:
+            figure.canvas.mpl_connect("close_event", self._on_figure_closed)
+
+    def _on_figure_closed(self, event):
+        if event is not None and getattr(event, "canvas", None) is not None:
+            figure = event.canvas.figure
+            if figure is self.current_figure:
+                self.current_figure = None
 
     def open_settings_dialog(self):
         dialog = SettingsDialog(

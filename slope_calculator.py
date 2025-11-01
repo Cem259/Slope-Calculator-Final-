@@ -1,19 +1,23 @@
 import sys
 
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D  # noqa: F401  # Required for 3D projection registration
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
     QApplication,
-    QWidget,
-    QPushButton,
-    QVBoxLayout,
+    QComboBox,
+    QDialog,
+    QFrame,
+    QGridLayout,
+    QHBoxLayout,
     QLabel,
     QLineEdit,
     QMessageBox,
-    QDialog,
-    QComboBox,
-    QHBoxLayout,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
 )
-from PyQt6.QtGui import QFont
 
 
 def compute_slope(distance, h1, h2):
@@ -89,58 +93,156 @@ class SlopeCalculator(ModernStyledWindow):
         self.theme_styles = {
             "light": """
             QWidget {
-                background-color: #f4f4f4;
-                color: #333;
+                background-color: #eef1f5;
+                color: #333333;
+                font-size: 12pt;
             }
             QLabel {
-                font-size: 12pt;
-                color: #333;
+                color: #2d2d2d;
+            }
+            QLabel#headerLabel {
+                font-size: 20pt;
+                font-weight: 600;
+                color: #1a1a1a;
+            }
+            QLabel#subtitleLabel {
+                font-size: 11pt;
+                color: #666666;
+            }
+            QLabel#resultLabel {
+                font-size: 16pt;
+                font-weight: 600;
+                color: #1a4c8f;
+            }
+            QLabel#resultTipLabel {
+                font-size: 10pt;
+                color: #666666;
+            }
+            QFrame#formCard, QFrame#resultCard {
+                background-color: #ffffff;
+                border-radius: 16px;
+                border: 1px solid #d8e1eb;
+                padding: 20px;
             }
             QLineEdit {
-                border: 2px solid #ccc;
-                border-radius: 5px;
-                padding: 5px;
+                border: 2px solid #cbd5e1;
+                border-radius: 6px;
+                padding: 6px 8px;
                 font-size: 12pt;
-                color: #333;
+                color: #333333;
+                background-color: #fdfdfd;
+            }
+            QLineEdit:focus {
+                border-color: #0078d7;
                 background-color: #ffffff;
             }
             QPushButton {
-                background-color: #0078D7;
-                color: white;
-                border-radius: 5px;
-                padding: 8px;
+                background-color: #0078d7;
+                color: #ffffff;
+                border-radius: 6px;
+                padding: 10px 18px;
                 font-size: 12pt;
             }
             QPushButton:hover {
                 background-color: #005a9e;
             }
+            QPushButton#view3dButton {
+                background-color: transparent;
+                color: #0a64c9;
+                border: 2px solid #0a64c9;
+            }
+            QPushButton#view3dButton:hover {
+                background-color: rgba(10, 100, 201, 0.08);
+            }
+            QPushButton#view3dButton:disabled {
+                color: #9ba4b5;
+                border-color: #d0d7e2;
+                background-color: transparent;
+            }
+            QPushButton#settingsButton {
+                background-color: transparent;
+                color: #465166;
+                border: 2px solid transparent;
+            }
+            QPushButton#settingsButton:hover {
+                color: #0a64c9;
+            }
             """,
             "dark": """
             QWidget {
-                background-color: #1e1e1e;
+                background-color: #121417;
                 color: #f4f4f4;
+                font-size: 12pt;
             }
             QLabel {
-                font-size: 12pt;
                 color: #f4f4f4;
             }
+            QLabel#headerLabel {
+                font-size: 20pt;
+                font-weight: 600;
+                color: #f4f7fb;
+            }
+            QLabel#subtitleLabel {
+                font-size: 11pt;
+                color: #a0a8b7;
+            }
+            QLabel#resultLabel {
+                font-size: 16pt;
+                font-weight: 600;
+                color: #8bbdff;
+            }
+            QLabel#resultTipLabel {
+                font-size: 10pt;
+                color: #a0a8b7;
+            }
+            QFrame#formCard, QFrame#resultCard {
+                background-color: #1d2127;
+                border-radius: 16px;
+                border: 1px solid #2d333b;
+                padding: 20px;
+            }
             QLineEdit {
-                border: 2px solid #555;
-                border-radius: 5px;
-                padding: 5px;
+                border: 2px solid #2d333b;
+                border-radius: 6px;
+                padding: 6px 8px;
                 font-size: 12pt;
                 color: #f4f4f4;
-                background-color: #2b2b2b;
+                background-color: #15181d;
+            }
+            QLineEdit:focus {
+                border-color: #3a7bd5;
+                background-color: #1a1e24;
             }
             QPushButton {
                 background-color: #3a7bd5;
-                color: white;
-                border-radius: 5px;
-                padding: 8px;
+                color: #ffffff;
+                border-radius: 6px;
+                padding: 10px 18px;
                 font-size: 12pt;
             }
             QPushButton:hover {
                 background-color: #2f66b8;
+            }
+            QPushButton#view3dButton {
+                background-color: transparent;
+                color: #8bbdff;
+                border: 2px solid #8bbdff;
+            }
+            QPushButton#view3dButton:hover {
+                background-color: rgba(139, 189, 255, 0.15);
+            }
+            QPushButton#view3dButton:disabled {
+                color: #4b5462;
+                border-color: #2d333b;
+                background-color: transparent;
+            }
+            QPushButton#settingsButton {
+                background-color: transparent;
+                color: #a0a8b7;
+                border: 2px solid transparent;
+            }
+            QPushButton#settingsButton:hover {
+                color: #8bbdff;
             }
             """,
         }
@@ -148,6 +250,8 @@ class SlopeCalculator(ModernStyledWindow):
 
         self.translations = {
             "tr": {
+                "header_title": "Eğim Analiz Panosu",
+                "subtitle": "Arazi ve yapı projelerinizi planlamak için eğim hesaplamalarını keşfedin.",
                 "window_title": "Eğim Hesaplayıcı",
                 "distance_label": "Yatay Mesafe:",
                 "first_height_label": "Birinci Nokta Yüksekliği:",
@@ -155,6 +259,8 @@ class SlopeCalculator(ModernStyledWindow):
                 "calculate_button": "Eğimi Hesapla",
                 "result_label_placeholder": "Eğim: -",
                 "result_label_prefix": "Eğim:",
+                "result_tip_placeholder": "Başlamak için mesafe ve yükseklik değerlerini girin.",
+                "result_tip_ready": "3B görünümü açarak eğim profilini farklı açılardan inceleyin.",
                 "settings_button": "Ayarlar",
                 "settings_title": "Ayarlar",
                 "settings_language_label": "Dil",
@@ -163,17 +269,24 @@ class SlopeCalculator(ModernStyledWindow):
                 "settings_theme_dark": "Koyu",
                 "settings_save": "Kaydet",
                 "settings_cancel": "İptal",
+                "view_3d_button": "3B Görünüm",
+                "view_3d_disabled_tooltip": "3B görünümünü açmak için önce eğimi hesaplayın.",
+                "view_3d_enabled_tooltip": "Eğimi etkileşimli bir 3B grafikle görüntüleyin.",
                 "input_error_title": "Giriş Hatası",
                 "input_error_message": "Lütfen geçerli sayısal değerler girin.",
                 "plot_title": "Eğim Görselleştirmesi",
+                "plot_3d_title": "3B Eğim Görselleştirmesi",
                 "plot_distance_label": "Mesafe (m)",
                 "plot_height_label": "Yükseklik (m)",
+                "plot_depth_label": "Yanal Ofset (m)",
                 "plot_legend_distance": "Mesafe",
                 "plot_legend_height": "Yükseklik",
                 "plot_legend_slope": "Eğim Çizgisi",
                 "plot_annotation": "Eğim: {value}",
             },
             "en": {
+                "header_title": "Slope Analysis Dashboard",
+                "subtitle": "Explore slope calculations to plan your terrain and construction projects.",
                 "window_title": "Slope Calculator",
                 "distance_label": "Horizontal Distance:",
                 "first_height_label": "First Point Height:",
@@ -181,6 +294,8 @@ class SlopeCalculator(ModernStyledWindow):
                 "calculate_button": "Calculate Slope",
                 "result_label_placeholder": "Slope: -",
                 "result_label_prefix": "Slope:",
+                "result_tip_placeholder": "Enter the distance and height values to get started.",
+                "result_tip_ready": "Open the 3D view to inspect the slope profile from new angles.",
                 "settings_button": "Settings",
                 "settings_title": "Settings",
                 "settings_language_label": "Language",
@@ -189,11 +304,16 @@ class SlopeCalculator(ModernStyledWindow):
                 "settings_theme_dark": "Dark",
                 "settings_save": "Save",
                 "settings_cancel": "Cancel",
+                "view_3d_button": "3D View",
+                "view_3d_disabled_tooltip": "Calculate the slope before opening the 3D view.",
+                "view_3d_enabled_tooltip": "Display the slope using an interactive 3D chart.",
                 "input_error_title": "Input Error",
                 "input_error_message": "Please enter valid numerical values.",
                 "plot_title": "Slope Visualization",
+                "plot_3d_title": "3D Slope Visualization",
                 "plot_distance_label": "Distance (m)",
                 "plot_height_label": "Height (m)",
+                "plot_depth_label": "Lateral Offset (m)",
                 "plot_legend_distance": "Distance",
                 "plot_legend_height": "Height",
                 "plot_legend_slope": "Slope Line",
@@ -207,36 +327,88 @@ class SlopeCalculator(ModernStyledWindow):
         self.current_language = "tr"
         self.last_result_value = None
 
-        self.setGeometry(100, 100, 400, 320)
-        layout = QVBoxLayout()
+        self.setGeometry(100, 100, 520, 420)
+        self.last_inputs = None
+
+        main_layout = QVBoxLayout()
+        main_layout.setSpacing(18)
+        main_layout.setContentsMargins(28, 28, 28, 28)
+
+        self.header_label = QLabel()
+        self.header_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.header_label.setObjectName("headerLabel")
+        main_layout.addWidget(self.header_label)
+
+        self.subtitle_label = QLabel()
+        self.subtitle_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.subtitle_label.setObjectName("subtitleLabel")
+        self.subtitle_label.setWordWrap(True)
+        main_layout.addWidget(self.subtitle_label)
+
+        form_card = QFrame()
+        form_card.setObjectName("formCard")
+        form_layout = QGridLayout()
+        form_layout.setHorizontalSpacing(16)
+        form_layout.setVerticalSpacing(12)
+        form_card.setLayout(form_layout)
 
         self.label1 = QLabel()
-        layout.addWidget(self.label1)
+        form_layout.addWidget(self.label1, 0, 0)
         self.input_distance = QLineEdit()
-        layout.addWidget(self.input_distance)
+        form_layout.addWidget(self.input_distance, 0, 1)
 
         self.label2 = QLabel()
-        layout.addWidget(self.label2)
+        form_layout.addWidget(self.label2, 1, 0)
         self.input_h1 = QLineEdit()
-        layout.addWidget(self.input_h1)
+        form_layout.addWidget(self.input_h1, 1, 1)
 
         self.label3 = QLabel()
-        layout.addWidget(self.label3)
+        form_layout.addWidget(self.label3, 2, 0)
         self.input_h2 = QLineEdit()
-        layout.addWidget(self.input_h2)
+        form_layout.addWidget(self.input_h2, 2, 1)
+
+        controls_row = QHBoxLayout()
+        controls_row.setSpacing(12)
 
         self.calc_button = QPushButton()
+        self.calc_button.setObjectName("calculateButton")
         self.calc_button.clicked.connect(self.calculate_slope)
-        layout.addWidget(self.calc_button)
+        controls_row.addWidget(self.calc_button)
 
-        self.result_label = QLabel()
-        layout.addWidget(self.result_label)
+        self.view3d_button = QPushButton()
+        self.view3d_button.setObjectName("view3dButton")
+        self.view3d_button.clicked.connect(self.show_3d_view)
+        controls_row.addWidget(self.view3d_button)
+
+        controls_row.addStretch()
 
         self.settings_button = QPushButton()
+        self.settings_button.setObjectName("settingsButton")
         self.settings_button.clicked.connect(self.open_settings_dialog)
-        layout.addWidget(self.settings_button)
+        controls_row.addWidget(self.settings_button)
 
-        self.setLayout(layout)
+        form_layout.addLayout(controls_row, 3, 0, 1, 2)
+
+        main_layout.addWidget(form_card)
+
+        result_card = QFrame()
+        result_card.setObjectName("resultCard")
+        result_layout = QVBoxLayout()
+        result_layout.setSpacing(6)
+        result_card.setLayout(result_layout)
+
+        self.result_label = QLabel()
+        self.result_label.setObjectName("resultLabel")
+        result_layout.addWidget(self.result_label)
+
+        self.tip_label = QLabel()
+        self.tip_label.setObjectName("resultTipLabel")
+        self.tip_label.setWordWrap(True)
+        result_layout.addWidget(self.tip_label)
+
+        main_layout.addWidget(result_card)
+
+        self.setLayout(main_layout)
         self.apply_language()
         self.apply_theme()
 
@@ -248,9 +420,13 @@ class SlopeCalculator(ModernStyledWindow):
             slope = compute_slope(h_distance, h1, h2)
             slope_text = f"{slope:.2f}%"
             self.last_result_value = slope_text
+            self.last_inputs = (h_distance, h1, h2)
             prefix = self.translations[self.current_language]["result_label_prefix"]
             self.result_label.setText(f"{prefix} {slope_text}")
             self.plot_graph(h_distance, h1, h2, slope)
+            texts = self.translations[self.current_language]
+            self.tip_label.setText(texts["result_tip_ready"])
+            self.update_view3d_button_state(texts)
         except ValueError:
             texts = self.translations[self.current_language]
             QMessageBox.critical(self, texts["input_error_title"], texts["input_error_message"])
@@ -307,6 +483,75 @@ class SlopeCalculator(ModernStyledWindow):
             fig.tight_layout()
             plt.show()
 
+    def show_3d_view(self):
+        if not self.last_inputs:
+            return
+        distance, h1, h2 = self.last_inputs
+        slope = compute_slope(distance, h1, h2)
+        self.plot_3d_graph(distance, h1, h2, slope)
+
+    def plot_3d_graph(self, distance, h1, h2, slope):
+        texts = self.translations[self.current_language]
+        style = "dark_background" if self.current_theme == "dark" else "default"
+
+        with plt.style.context(style):
+            fig = plt.figure(figsize=(6, 4))
+            ax = fig.add_subplot(111, projection="3d")
+
+            x_values = [0, distance]
+            y_values = [0, 0]
+            z_values = [h1, h2]
+
+            ax.plot(
+                x_values,
+                y_values,
+                [h1, h1],
+                linestyle="-",
+                color="#ff6b6b",
+                linewidth=2,
+                label=texts["plot_legend_distance"],
+            )
+            ax.plot(
+                [distance, distance],
+                [0, 0],
+                [h1, h2],
+                linestyle="dashed",
+                color="#bbbbbb",
+                linewidth=2,
+                label=texts["plot_legend_height"],
+            )
+            ax.plot(
+                x_values,
+                y_values,
+                z_values,
+                marker="o",
+                linestyle="-",
+                color="#4d96ff",
+                linewidth=3,
+                label=texts["plot_legend_slope"],
+            )
+
+            ax.set_xlabel(texts["plot_distance_label"])
+            ax.set_ylabel(texts["plot_depth_label"])
+            ax.set_zlabel(texts["plot_height_label"])
+            ax.set_title(texts["plot_3d_title"])
+            ax.legend()
+
+            annotation = texts["plot_annotation"].format(value=f"{slope:.2f}%")
+            annotation_x = distance * 0.5
+            annotation_z = h1 + (h2 - h1) * 0.5
+            ax.text(
+                annotation_x,
+                0.2 * max(distance, 1),
+                annotation_z,
+                annotation,
+                fontsize=11,
+                color="#ffffff" if self.current_theme == "dark" else "#000000",
+            )
+
+            fig.tight_layout()
+            plt.show()
+
     def open_settings_dialog(self):
         dialog = SettingsDialog(
             self.current_language,
@@ -331,19 +576,36 @@ class SlopeCalculator(ModernStyledWindow):
         self.label2.setText(texts["first_height_label"])
         self.label3.setText(texts["second_height_label"])
         self.calc_button.setText(texts["calculate_button"])
+        self.view3d_button.setText(texts["view_3d_button"])
         self.settings_button.setText(texts["settings_button"])
+        self.header_label.setText(texts["header_title"])
+        self.subtitle_label.setText(texts["subtitle"])
 
         if self.last_result_value is None:
             self.result_label.setText(texts["result_label_placeholder"])
+            self.tip_label.setText(texts["result_tip_placeholder"])
         else:
             prefix = texts["result_label_prefix"]
             self.result_label.setText(f"{prefix} {self.last_result_value}")
+            self.tip_label.setText(texts["result_tip_ready"])
+
+        self.update_view3d_button_state(texts)
 
     def apply_theme(self):
         self.setStyleSheet(self.load_styles(self.current_theme))
 
     def load_styles(self, theme="light"):
         return self.theme_styles.get(theme, self.theme_styles["light"])
+
+    def update_view3d_button_state(self, texts=None):
+        if texts is None:
+            texts = self.translations[self.current_language]
+        if self.last_inputs is None:
+            self.view3d_button.setEnabled(False)
+            self.view3d_button.setToolTip(texts["view_3d_disabled_tooltip"])
+        else:
+            self.view3d_button.setEnabled(True)
+            self.view3d_button.setToolTip(texts["view_3d_enabled_tooltip"])
 
 
 def run():

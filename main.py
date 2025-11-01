@@ -1,11 +1,13 @@
 """Application entry point for the slope calculator GUI."""
+from __future__ import annotations
 
-from slope_calculator import run
+from app.main import run
 
 
 def main() -> int:
     """Entrypoint used by the CLI and module execution."""
-    return run()
+    run()
+    return 0
 
 
 if __name__ == "__main__":

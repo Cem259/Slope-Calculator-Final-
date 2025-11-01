@@ -10,3 +10,13 @@ def compute_slope(distance: float, h1: float, h2: float) -> float:
 
 
 __all__ = ["run", "compute_slope"]
+
+
+def main() -> int:
+    """Launch the GUI when executing the legacy module directly."""
+    run()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

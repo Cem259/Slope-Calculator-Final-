@@ -271,8 +271,10 @@ class SlopeCalculator(ModernStyledWindow):
                 "settings_save": "Kaydet",
                 "settings_cancel": "İptal",
                 "view_3d_button": "3B Görünüm",
+                "view_2d_button": "2B Görünüm",
                 "view_3d_disabled_tooltip": "3B görünümünü açmak için önce eğimi hesaplayın.",
                 "view_3d_enabled_tooltip": "Eğimi etkileşimli bir 3B grafikle görüntüleyin.",
+                "view_2d_enabled_tooltip": "Eğimi klasik 2B grafikte görüntüleyin.",
                 "input_error_title": "Giriş Hatası",
                 "input_error_message": "Lütfen geçerli sayısal değerler girin.",
                 "plot_title": "Eğim Görselleştirmesi",
@@ -306,8 +308,10 @@ class SlopeCalculator(ModernStyledWindow):
                 "settings_save": "Save",
                 "settings_cancel": "Cancel",
                 "view_3d_button": "3D View",
+                "view_2d_button": "2D View",
                 "view_3d_disabled_tooltip": "Calculate the slope before opening the 3D view.",
                 "view_3d_enabled_tooltip": "Display the slope using an interactive 3D chart.",
+                "view_2d_enabled_tooltip": "Display the slope using the standard 2D chart.",
                 "input_error_title": "Input Error",
                 "input_error_message": "Please enter valid numerical values.",
                 "plot_title": "Slope Visualization",
@@ -327,6 +331,7 @@ class SlopeCalculator(ModernStyledWindow):
         }
         self.current_language = "tr"
         self.last_result_value = None
+        self.current_view_mode = "2d"
 
         self.setGeometry(100, 100, 520, 420)
         self.last_inputs = None
@@ -382,7 +387,7 @@ class SlopeCalculator(ModernStyledWindow):
 
         self.view3d_button = QPushButton()
         self.view3d_button.setObjectName("view3dButton")
-        self.view3d_button.clicked.connect(self.show_3d_view)
+        self.view3d_button.clicked.connect(self.toggle_view_mode)
         view_button_policy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         view_button_policy.setHorizontalStretch(1)
         self.view3d_button.setSizePolicy(view_button_policy)
@@ -433,6 +438,7 @@ class SlopeCalculator(ModernStyledWindow):
             self.last_inputs = (h_distance, h1, h2)
             prefix = self.translations[self.current_language]["result_label_prefix"]
             self.result_label.setText(f"{prefix} {slope_text}")
+            self.current_view_mode = "2d"
             self.plot_graph(h_distance, h1, h2, slope)
             texts = self.translations[self.current_language]
             self.tip_label.setText(texts["result_tip_ready"])
@@ -493,12 +499,18 @@ class SlopeCalculator(ModernStyledWindow):
             fig.tight_layout()
             plt.show()
 
-    def show_3d_view(self):
+    def toggle_view_mode(self):
         if not self.last_inputs:
             return
         distance, h1, h2 = self.last_inputs
         slope = compute_slope(distance, h1, h2)
-        self.plot_3d_graph(distance, h1, h2, slope)
+        if self.current_view_mode == "2d":
+            self.plot_3d_graph(distance, h1, h2, slope)
+            self.current_view_mode = "3d"
+        else:
+            self.plot_graph(distance, h1, h2, slope)
+            self.current_view_mode = "2d"
+        self.update_view3d_button_state()
 
     def plot_3d_graph(self, distance, h1, h2, slope):
         texts = self.translations[self.current_language]
@@ -586,7 +598,6 @@ class SlopeCalculator(ModernStyledWindow):
         self.label2.setText(texts["first_height_label"])
         self.label3.setText(texts["second_height_label"])
         self.calc_button.setText(texts["calculate_button"])
-        self.view3d_button.setText(texts["view_3d_button"])
         self.settings_button.setText(texts["settings_button"])
         self.header_label.setText(texts["header_title"])
         self.subtitle_label.setText(texts["subtitle"])
@@ -611,11 +622,18 @@ class SlopeCalculator(ModernStyledWindow):
         if texts is None:
             texts = self.translations[self.current_language]
         if self.last_inputs is None:
+            self.current_view_mode = "2d"
             self.view3d_button.setEnabled(False)
+            self.view3d_button.setText(texts["view_3d_button"])
             self.view3d_button.setToolTip(texts["view_3d_disabled_tooltip"])
         else:
             self.view3d_button.setEnabled(True)
-            self.view3d_button.setToolTip(texts["view_3d_enabled_tooltip"])
+            if self.current_view_mode == "3d":
+                self.view3d_button.setText(texts["view_2d_button"])
+                self.view3d_button.setToolTip(texts["view_2d_enabled_tooltip"])
+            else:
+                self.view3d_button.setText(texts["view_3d_button"])
+                self.view3d_button.setToolTip(texts["view_3d_enabled_tooltip"])
 
 
 def run():

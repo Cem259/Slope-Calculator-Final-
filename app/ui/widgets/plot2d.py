@@ -61,10 +61,11 @@ class Plot2DWidget(QWidget):
                     linewidth=2,
                 )
             self._axes.scatter(xs, zs, color="black", s=30)
-            self._axes.legend([
+            legend_handles = [
                 matplotlib.lines.Line2D([], [], color="tab:green", label=t("segments_safe")),
                 matplotlib.lines.Line2D([], [], color="tab:red", label=t("segments_steep")),
-            ])
+            ]
+            self._axes.legend(handles=legend_handles)
         else:
             self._axes.text(0.5, 0.5, t("plot2d_empty"), transform=self._axes.transAxes, ha="center")
         self._canvas.draw_idle()

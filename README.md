@@ -1,6 +1,6 @@
 # Slope Calculator
 
-Modernized PyQt6 desktop application for slope analysis with bilingual interface, 2D/3D visualisation, and CSV tooling.
+Modernized PyQt6 desktop application for slope analysis with bilingual interface, 2D/3D visualisation.
 
 ## Features
 
